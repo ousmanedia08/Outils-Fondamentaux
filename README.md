@@ -5,7 +5,7 @@
 ```
 .
 ├── README.md        ce fichier : vue d'ensemble du rendu
-├── tp/              mes solutions aux travaux pratiques (carnets Jupyter TP2 à TP6)
+├── tp/              mes solutions aux travaux pratiques
 └── projet/          le projet personnel (code, tests, résultats, README détaillé)
 ```
 
