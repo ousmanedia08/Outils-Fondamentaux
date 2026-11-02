@@ -1,4 +1,4 @@
-# Analyseur de plan de campus ou de quartier
+# Amélioré un signal Wi-fi
 
 ## Pourquoi ce projet ?
 
@@ -17,6 +17,7 @@ Le placement proposé met une borne dans chaque branche de la cour. Le programme
 Il faut Python et Matplotlib. Dans ce dossier, lancer :
 
 ```bash
+python -m pip install matplotlib
 python -m pip install -r requirements.txt
 python projet.py
 ```
@@ -51,4 +52,4 @@ Le plan et la formule du signal sont inventés. Le programme ne simule pas les m
 
 ## Usage de l'IA
 
-L'IA a aidé à écrire et expliquer une partie du programme. Avant de rendre le projet, je dois vérifier les résultats moi-même et être capable d'expliquer chaque fonction et chaque boucle.
+L'IA (ChatGPT) a aidé à écrire les fonctions mathématiques. Elle a aussi était d'une grande aide dans la structuration du code même s'il a fallu derrière beaucoups de modification et de documentation car le code fourni était trop complexe et s'éloigner de mes objectifs.
