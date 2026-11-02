@@ -49,6 +49,8 @@ Le temps mesuré change selon l'ordinateur. Il sert seulement à comparer les ta
 ## Résultats attendues avec les données actuelles
 La cour a une surface de 78 unités carrées. Avec le seuil de signal fixé à 60 %, la dichotomie estime la portée des bornes entre 3,48 et 3,49 unités. Sur la grille principale, le placement proposé couvre 68,4 % des points, contre 64,3 % pour le placement de départ. Les essais avec des grilles plus ou moins fines donnent une couverture proposée comprise entre 68,4 % et 69,2 % ; leur durée augmente avec le nombre de points, de 0,001 à 0,031 seconde. Ces résultats indiquent que le placement proposé couvre davantage de points dans ce plan fictif.
 
+Le programme vous montrera aussi deux images, un avant et un aprés pour mieux illustré les résultats.  
+
 ## Limites
 
 Le plan et la formule du signal sont inventés. Le programme ne simule pas les murs, les étages ou les interférences d'un vrai réseau Wi-Fi. Il montre comment des notions de maths peuvent aider à comparer deux placements, pas une garantie de couverture réelle. Le projet n'utilise pas les notions de chiffrement du TP5, car elles ne servent pas à répondre à cette question.
