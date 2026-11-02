@@ -12,7 +12,7 @@
 - **`tp/`** : mes carnets de TP tels que je les ai écrits en séance et retravaillés. 
 - **`projet/`** : le projet personnel. Le détail des résultats, des limites et de la méthode est dans [`projet/README.md`](projet/README.md).
 
-## Le projet en bref
+## Résumer du projet
 
 **Titre du projet : Analyseur de plan de campus ou de quartier.**
 
