@@ -1,64 +1,54 @@
-# Projet Outils Fondementaux
+# Analyseur de plan de campus ou de quartier
 
-## Organisation du dépôt
+## Pourquoi ce projet ?
 
-```
-.
-├── README.md        ce fichier : vue d'ensemble du rendu
-├── tp/              mes solutions aux travaux pratiques
-└── projet/          le projet personnel (code, tests, résultats, README détaillé)
-```
+Dans mon quartier au Sénégal, les bornes Wi-Fi sont souvent réajustées parce que le signal devient faible. Après quelques recherches, j'ai vu que leur position pouvait jouer un rôle. Je me suis donc demandé si je pouvais représenter ce problème avec les notions de mathématiques vues en TP.
 
-- **`tp/`** : mes carnets de TP tels que je les ai écrits en séance et retravaillés. 
-- **`projet/`** : le projet personnel. Le détail des résultats, des limites et de la méthode est dans [`projet/README.md`](projet/README.md).
+Je ne cherche pas à expliquer toutes les raisons pour lesquelles un vrai signal baisse. Je veux surtout essayer une idée simple : est-ce que changer l'emplacement de deux bornes améliore la couverture d'une cour ? Pour donner une portée aux bornes, j'utilise aussi un petit modèle mathématique du signal et je cherche son seuil avec la dichotomie.
 
-## Résumer du projet
+## Mon idée
 
-**Titre du projet : Analyseur de plan de campus ou de quartier.**
+Je dessine une cour fictive en forme de L. Le programme compare deux façons de placer deux bornes Wi-Fi. Il colore en vert les endroits où une borne est assez proche et en rouge les endroits où le Wi-Fi ne passe pas.
 
-**Question :** Une cour en L (plan fictif, 78 unités²) doit être couverte par des bornes Wi-Fi de portée 3,2. Où les placer, combien en faut-il, et à quel point peut-on se fier au résultat ?
+Le placement proposé met une borne dans chaque branche de la cour. Le programme affiche le pourcentage de points couverts pour les deux placements afin de voir lequel fonctionne mieux. C'est une comparaison sur un plan inventé, pas un conseil de réglage pour une vraie installation Wi-Fi.
 
-Le projet part d'un petit programme de placement, puis étudie ses propres limites par six expériences mesurées :
-fiabilité du test « point dans un polygone » (flottants contre arithmétique exacte), 
-vitesse de convergence de Monte-Carlo, coût de la recherche, 
-biais d'optimisme,
-nombre de bornes nécessaires,
-dépendance à l'orientation du plan.
+## Lancer le programme
 
-Le score d'environ 68 % correspond au meilleur placement sur l'échantillon qui sert à le choisir. Le programme l'évalue aussi sur un nouvel échantillon indépendant ; ce score est généralement un peu inférieur. Le README du projet et les expériences distinguent ces deux mesures.
-
-**Pourquoi ce projet?**
-Dans mon quartier aux Sénégal les bornes wifi sont constamment réviser car le signale est devient faibles au bout de quelques temps aprés des recherche j'ai vu que cela pouvais etre du au positionnement des bornes wifi d'où ce projet.
-
-## Pour le lancer:
-
-Python 3.10 ou plus récent, et Matplotlib :
+Il faut Python et Matplotlib. Dans ce dossier, lancer :
 
 ```bash
-cd projet
 python -m pip install -r requirements.txt
-python projet.py                  # placement de 2 bornes, comparaison manuel / optimisé
-python experiences.py             # les 6 expériences (environ 35 s)
-python tests/test_geometrie.py    # les tests
+python projet.py
 ```
 
-Les résultats sont écrits dans `projet/resultats/` (plan, figures, `resultats.txt`).
+Le programme affiche deux cartes côte à côte et crée aussi l'image `carte_wifi.png`.
 
-## Ce qu'on doit observer
+## Comment ça marche
 
-- Sur la cour en L, le placement optimisé de 2 bornes obtient environ 68 % sur l'échantillon de recherche, contre environ 60 % pour le placement manuel. L'évaluation indépendante est détaillée séparément. Deux bornes ne suffisent pas : il en faut trois à quatre.
-- Mon test d'appartenance du TP6 (boîte englobante) était faux : il estime l'aire du L à 120 au lieu de 78. Le lancer de rayon corrige l'erreur.
-- L'erreur de Monte-Carlo décroît en 1/√n, et la recherche par masques de bits est environ 170 fois plus rapide que la recherche naïve, pour un résultat identique.
-- Le meilleur score observé sur l'échantillon de recherche est trop optimiste : d'où l'évaluation sur des points neufs.
-- Une limite non résolue : le meilleur placement dépend un peu de l'orientation du plan, et le raffinement continu ne supprime pas cette dépendance.
+Le programme utilise des notions de plusieurs TP, avec des fonctions courtes et des boucles :
 
-Les chiffres exacts, leur interprétation et les limites sont dans `projet/README.md`.
+- la formule du lacet pour calculer l'aire de la cour ;
+- le lancer de rayon pour savoir si un point est dans la cour ;
+- le théorème de Pythagore pour calculer la distance entre un point et une borne ;
+- un polynôme et la dichotomie pour trouver la portée associée au seuil de signal (TP3) ;
+- des nombres à virgule et une tolérance pour arrêter la dichotomie (TP1) ;
+- une mesure du temps pour comparer trois tailles de grille (TP2) ;
+- des boucles pour parcourir le plan et compter les points couverts (TP6).
 
-## Notions du module utilisées
+La qualité du signal est représentée par la formule inventée `100 - 8 × distance - distance²`. Ce n'est pas une formule réelle du Wi-Fi. Le seuil est fixé à 60 %. La dichotomie trouve la distance à laquelle cette formule descend jusqu'au seuil ; cette distance devient la portée utilisée pour colorier la carte.
 
-Flottants et comparaison à l'arithmétique exacte (TP1), matrices homogènes et rotations (TP4), géométrie du plan : aire, lancer de rayon, Monte-Carlo (TP6), et la méthode de mesure des temps des TP2 et TP3. Les détails, y compris ce qui n'est pas utilisé et pourquoi, est dans `projet/README.md`.
+La carte est découpée en petits points. Pour chaque point dans la cour, le programme regarde si la qualité calculée depuis au moins une borne atteint le seuil. Le cercle bleu de chaque borne est dessiné avec une boucle qui calcule ses points. Le pourcentage est une estimation basée sur cette grille : une grille plus fine donne une carte plus précise, mais demande plus de calculs.
+
+## Changer le plan
+
+Dans `projet.py`, les premières lignes permettent de modifier le plan, les bornes, le seuil du signal et la précision de la dichotomie. Tu peux aussi modifier la formule de `qualite_signal` et voir comment la portée calculée change.
+
+Le temps mesuré change selon l'ordinateur. Il sert seulement à comparer les tailles de grille sur la même machine.
+
+## Limites
+
+Le plan et la formule du signal sont inventés. Le programme ne simule pas les murs, les étages ou les interférences d'un vrai réseau Wi-Fi. Il montre comment des notions de maths peuvent aider à comparer deux placements, pas une garantie de couverture réelle. Le projet n'utilise pas les notions de chiffrement du TP5, car elles ne servent pas à répondre à cette question.
 
 ## Usage de l'IA
 
-Un assistant (Claude) a aidé à relire ma première version, à proposer les expériences, à écrire une partie du code et à rédiger la documentation.
-Ce qui a été vérifié, et les conclusions de l'assistant que j'ai dû corriger, sont décrits dans `projet/README.md`, section « Usage de l'IA ».
+L'IA a aidé à écrire et expliquer une partie du programme. Avant de rendre le projet, je dois vérifier les résultats moi-même et être capable d'expliquer chaque fonction et chaque boucle.
