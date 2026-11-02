@@ -30,12 +30,17 @@ Le score d'environ 68 % correspond au meilleur placement sur l'échantillon qui 
 **Pourquoi ce projet?**
 Dans mon quartier aux Sénégal les bornes wifi sont constamment réviser car le signale est devient faibles au bout de quelques temps aprés des recherche j'ai vu que cela pouvais etre du au positionnement des bornes wifi d'où ce projet.
 
-## Disposition
+## Pour le lancer:
 
-- **python projet.py:** placement de 2 bornes, comparaison manuel / optimisé
-- **python experiences.py:** les 6 expériences (environ 35 s)
-- **python tests/test_geometrie.py:** les tests
+Python 3.10 ou plus récent, et Matplotlib :
 
+```bash
+cd projet
+python -m pip install -r requirements.txt
+python projet.py                  # placement de 2 bornes, comparaison manuel / optimisé
+python experiences.py             # les 6 expériences (environ 35 s)
+python tests/test_geometrie.py    # les tests
+```
 
 Les résultats sont écrits dans `projet/resultats/` (plan, figures, `resultats.txt`).
 
