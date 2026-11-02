@@ -1,0 +1,98 @@
+=== Exp. 1 : fiabilité du test d'appartenance ===
+  aire estimée par Monte-Carlo, boîte englobante (TP6, fausse)  :  120.00   (exacte : 78.00)
+  aire estimée par Monte-Carlo, lancer de rayon                 :   78.50   (exacte : 78.00)
+  désaccords avec la référence exacte, pour des points à distance d de la frontière
+  (cour tournée de 30° : sommets irrationnels, donc vrais arrondis ; la moitié des points est dehors) :
+     d      tolérance 1e-10    tolérance 0
+    1e-06          0/3000            0/3000
+    1e-09          0/3000            0/3000
+    1e-10       1562/3000            0/3000
+    1e-11       1514/3000            0/3000
+    1e-12       1481/3000            0/3000
+    1e-14       1492/3000            0/3000
+    1e-15       1540/3000          296/3000
+  Lecture : jusqu'à d = 1e-9 la version flottante est sans faute. Sous 1e-10, la tolérance
+  déclare « dedans » des points dehors (environ la moitié de l'échantillon : c'est le prix de la
+  tolérance, choisi volontairement). Sans tolérance, les erreurs ne viennent que des arrondis et
+  n'apparaissent qu'aux distances de l'ordre de l'unité d'arrondi des coordonnées (~1e-15 ici).
+  Impact sur la couverture : la bande ambiguë a une aire ~ périmètre × 1e-10 = 4e-09,
+  soit une chance sur 2e+10 qu'un point tiré y tombe : négligeable.
+
+=== Exp. 2 : convergence de Monte-Carlo et intervalle de confiance ===
+  proportion vraie (aire/boîte) = 0.6500 ; 80 répétitions par taille
+     n     erreur RMS    couverture de l'IC 95 %
+     100    0.05211       93.8 %
+     300    0.02563       95.0 %
+    1000    0.01265       96.2 %
+    3000    0.00957       92.5 %
+   10000    0.00457       95.0 %
+  pente de log(erreur) en fonction de log(n) : -0.51   (théorie : -0.50)
+  couverture moyenne de l'intervalle : 94.5 % (visé : 95 %, avec 80 répétitions
+  chaque pourcentage n'est précis qu'à ±5 points environ)
+  Lecture : diviser l'erreur par 10 coûte 100 fois plus de points.
+
+=== Exp. 3 : coût de la recherche exhaustive (k = 2) ===
+  grille  candidats   paires   naïf (s)   masques : construction (s)   recherche des paires (s)   identique
+      4         12       66     0.137                  0.006                      0.000      oui
+      6         24      276     0.352                  0.007                      0.000      oui
+      8         39      741     0.948                  0.012                      0.000      oui
+     10         64     2016     2.247                  0.020                      0.001      oui
+     12         95     4465     5.241                  0.037                      0.001      oui
+     20        256    32640       nan                  0.081                      0.009      -
+     28        512   130816       nan                  0.159                      0.037      -
+     40       1048   548628       nan                  0.322                      0.151      -
+     56       2014  2027091       nan                  0.719                      0.594      -
+  exposants mesurés (temps ~ C^α, sur les plus grandes grilles de chaque méthode) :
+    naïf : α = 1.94 ; masques, construction : α = 1.05 ; masques, recherche : α = 2.04
+  accélération de la recherche à la grille 12 (construction comprise) : ×136
+  Lecture : le nombre de paires croît comme C² ; la version naïve refait N distances à chaque paire,
+  les masques les calculent une seule fois (coût linéaire en C), puis une paire ne coûte
+  qu'un OU binaire et un comptage de bits. Le mur quadratique reste, il est simplement repoussé.
+
+=== Exp. 4 : le meilleur score observé est-il trop beau ? ===
+  biais = score sur l'échantillon de recherche − score réel (échantillon de référence), en points de %
+  N points \ grille         4       8      14
+       100              6.14    6.80    8.70
+       300              2.67    3.46    4.47
+      1000              1.37    2.07    1.64
+      3000              0.74    0.92    0.38
+  Lecture : biais positif dans toutes les cases : oui. Il décroît quand l'échantillon grossit ;
+  l'effet du nombre de candidats n'est net que pour les petits échantillons (cases du haut).
+  D'où l'évaluation finale sur des points neufs, jamais utilisés pour choisir.
+
+=== Exp. 5 : glouton contre exhaustif, nombre de bornes ===
+  grille 8 (39 candidats), 1500 points, portée 3.2
+   k   exhaustif   glouton   rapport    t exhaustif (s)
+   1      39.2 %     39.2 %    1.000       0.000
+   2      68.3 %     68.3 %    1.000       0.000
+   3      92.8 %     92.8 %    1.000       0.005
+   4      99.0 %     96.7 %    0.977       0.036
+  borne théorique du glouton : rapport >= 1 - 1/e = 0.632
+  gain marginal de la k-ième borne (glouton, grille 14), en points de % :
+    k=1: +40.9  k=2: +28.7  k=3: +24.5  k=4: +4.3  k=5: +0.7  k=6: +0.5  k=7: +0.3  k=8: +0.3
+    couverture >= 90 % : 3 bornes
+    couverture >= 95 % : 4 bornes
+    couverture >= 99 % : 6 bornes
+  sur 40 échantillons de 400 points (k = 3) : glouton strictement battu 35 fois ; pire rapport 0.872
+  Lecture : le glouton est souvent battu (35/40) mais de peu (pire cas 0.872) : la garantie
+  théorique (0.632) est très pessimiste ici. Les gains marginaux décroissent avec une rupture nette :
+  les 3 premières bornes apportent 94 % de couverture, les suivantes quelques dixièmes (derniers recoins).
+  Pour cette cour et cette portée : 3 bornes donnent environ 90 à 94 % ; il en faut 4 pour dépasser 95 %.
+
+=== Exp. 6 : le résultat dépend-il de l'orientation du plan ? ===
+  (points et cour tournés ensemble : aucun bruit d'échantillonnage entre les lignes)
+  angle   |aire-78|   grille: entraîn. / neufs    raffiné: entraîn. / neufs
+     0°   0.0e+00       67.6 % /  67.2 %          69.9 % /  68.9 %
+    15°   0.0e+00       67.1 % /  66.1 %          69.9 % /  69.1 %
+    30°   0.0e+00       66.4 % /  65.8 %          68.4 % /  67.3 %
+    45°   0.0e+00       68.0 % /  66.9 %          68.6 % /  67.1 %
+    60°   0.0e+00       66.7 % /  65.2 %          69.2 % /  68.5 %
+    75°   1.4e-14       67.2 % /  66.8 %          69.8 % /  69.0 %
+    90°   0.0e+00       67.6 % /  67.2 %          69.9 % /  68.9 %
+  étendue sur l'échantillon d'entraînement : grille 1.6 points ; raffiné 1.5 points
+  gain moyen du raffinement (entraînement) : +2.2 points
+  Lecture : l'aire est invariante et, par construction du protocole, la couverture d'un placement
+  l'est aussi. Si le score de la grille change avec l'angle, la seule cause est la grille.
+  C'est le cas : 1.6 points d'écart pour un problème géométriquement identique.
+  Le raffinement (1.5 points d'étendue) ne réduit pas nettement cette dépendance : il gagne
+  en moyenne en couverture mais reste bloqué dans des optima locaux qui dépendent du point de départ.
