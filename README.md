@@ -27,6 +27,9 @@ dépendance à l'orientation du plan.
 
 Le score d'environ 68 % correspond au meilleur placement sur l'échantillon qui sert à le choisir. Le programme l'évalue aussi sur un nouvel échantillon indépendant ; ce score est généralement un peu inférieur. Le README du projet et les expériences distinguent ces deux mesures.
 
+**Pourquoi ce projet?**
+Dans mon quartier aux Sénégal les bornes wifi sont constamment réviser car le signale est devient faibles au bout de quelques temps aprés des recherche j'ai vu que cela pouvais etre du au positionnement des bornes wifi d'où ce projet.
+
 ## Disposition
 
 - **python projet.py:** placement de 2 bornes, comparaison manuel / optimisé
