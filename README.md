@@ -29,9 +29,9 @@ Le score d'environ 68 % correspond au meilleur placement sur l'échantillon qui 
 
 ## Disposition
 
-python projet.py: placement de 2 bornes, comparaison manuel / optimisé
-python experiences.py: les 6 expériences (environ 35 s)
-python tests/test_geometrie.py: les tests
+**python projet.py:** placement de 2 bornes, comparaison manuel / optimisé
+**python experiences.py:** les 6 expériences (environ 35 s)
+**python tests/test_geometrie.py:** les tests
 
 
 Les résultats sont écrits dans `projet/resultats/` (plan, figures, `resultats.txt`).
